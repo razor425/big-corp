@@ -5,16 +5,11 @@ import com.rrodriguez.glide.bigcorp.model.dao.DepartmentDAO;
 import com.rrodriguez.glide.bigcorp.model.dao.EmployeeDAO;
 import com.rrodriguez.glide.bigcorp.model.dao.Transformable;
 import com.rrodriguez.glide.bigcorp.model.dto.EmployeeDTO;
-import com.rrodriguez.glide.bigcorp.service.DepartmentService;
 import com.rrodriguez.glide.bigcorp.service.EmployeeService;
-import com.rrodriguez.glide.bigcorp.service.OfficeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,12 +20,6 @@ public class EmployeeConverter {
     private EmployeeService employeeService;
 
     @Autowired
-    private DepartmentService departmentService;
-
-    @Autowired
-    private OfficeService officeService;
-
-    @Autowired
     private OfficeConverter officeConverter;
 
     @Autowired
@@ -38,16 +27,16 @@ public class EmployeeConverter {
 
 
     public EmployeeDAO getEmployeeById(Long id, List<Transformation> transformations) {
-        List<Long> ids = new ArrayList<>();
+        Set<Long> ids = new HashSet<>();
         ids.add(id);
         List<EmployeeDAO> result = getEmployeesByIds(ids);
 
-        result = transform(transformations, result);
+        result = transform(result, transformations);
 
         return result.get(0);
     }
 
-    public List<EmployeeDAO> getEmployeesByIds(List<Long> ids) {
+    public List<EmployeeDAO> getEmployeesByIds(Set<Long> ids) {
         List<EmployeeDTO> employeesRaw = employeeService.getEmployeesById(ids);
 
         return employeesRaw.stream()
@@ -55,11 +44,11 @@ public class EmployeeConverter {
                 .collect(Collectors.toList());
     }
 
-    private List<EmployeeDAO> transform(List<Transformation> transformations, List<EmployeeDAO> list) {
+    private List<EmployeeDAO> transform(List<EmployeeDAO> list, List<Transformation> transformations) {
 
         List<EmployeeDAO> employeeStage = list;
         List<DepartmentDAO> departmentStage = null;
-        List<EmployeeDAO> employeeInterStage = employeeStage;
+        List<EmployeeDAO> employeeInterStage;
 
         for (Transformation t : transformations) {
 
@@ -93,11 +82,11 @@ public class EmployeeConverter {
     }
 
     private List<EmployeeDAO> complementManager(List<EmployeeDAO> list) {
-        List<Long> fetchIds = list.stream()
+        Set<Long> fetchIds = list.stream()
                 .map(EmployeeDAO::getManager)
                 .filter(Objects::nonNull)
                 .map(Transformable::getId)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         Map<Long, EmployeeDAO> items = getEmployeesByIds(fetchIds)
                 .stream()
@@ -111,8 +100,15 @@ public class EmployeeConverter {
     }
 
 
-    public List<EmployeeDAO> getEmployees(int limit, int offset) {
-        return null;
+    public List<EmployeeDAO> getEmployees(int limit, int offset, List<Transformation> transformations) {
+        List<EmployeeDAO> result = employeeService.getEmployees(limit, offset)
+                .stream()
+                .map(EmployeeDAO::new)
+                .collect(Collectors.toList());
+
+        transform(result,transformations);
+
+        return result;
     }
 
 

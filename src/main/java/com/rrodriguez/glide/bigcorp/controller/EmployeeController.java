@@ -33,7 +33,7 @@ public class EmployeeController {
     public ResponseEntity getEmployeeById(
             @PathVariable Long id,
             @RequestParam(value = "expand", required = false) List<String> expand) {
-        List<Transformation> transformations = new ArrayList<>();
+        List<Transformation> transformations;
         try {
             transformations = InputValidator.validateAndParseExpansions("employee", expand);
         } catch (InvalidExpansionException e) {
@@ -46,11 +46,19 @@ public class EmployeeController {
 
     //TODO make spring return 400 bad request instead of 500 internal server error
     @GetMapping("/employees")
-    public ResponseEntity<List<EmployeeDAO>> getEmployee(
+    public ResponseEntity getEmployee(
             @RequestParam(value = "limit", required = false, defaultValue = "100") @Min(1) @Max(1000) int limit,
             @RequestParam(value = "offset", required = false, defaultValue = "0") @Min(0) int offset,
             @RequestParam(value = "expand", required = false) List<String> expand) {
-        return ResponseEntity.ok(employeeService.getEmployees(limit, offset));
+        List<Transformation> transformations;
+
+        try {
+            transformations = InputValidator.validateAndParseExpansions("employee", expand);
+        } catch (InvalidExpansionException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok(employeeService.getEmployees(limit, offset,transformations));
     }
 
 }

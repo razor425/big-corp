@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +36,7 @@ public class EmployeeService {
         this.restTemplate = restTemplate;
     }
 
-    public List<EmployeeDTO> getEmployeesById(List<Long> ids) {
+    public List<EmployeeDTO> getEmployeesById(Set<Long> ids) {
         List<EmployeeDTO> result = new ArrayList<>();
         String params = ids.stream().map(p -> "id=" + p.toString()).collect(Collectors.joining("&"));
         return !params.equalsIgnoreCase("") ? request(params) : result;
