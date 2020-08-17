@@ -1,0 +1,17 @@
+employees:
+  api:
+    url:
+      base: https://rfy56yfcwk.execute-api.us-west-1.amazonaws.com/bigcorp/employees
+    connect:
+      timeout: 30000
+    read:
+      timeout: 30000
+    retry:
+      max-attempts: 2
+      delay: 7000
+
+offices:
+  path: json/offices.json
+
+departments:
+  path: json/departments.json
