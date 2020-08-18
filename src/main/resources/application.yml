@@ -15,3 +15,8 @@ offices:
 
 departments:
   path: json/departments.json
+
+logging:
+  level:
+    org:
+      springframework: debug
