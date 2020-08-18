@@ -2,7 +2,6 @@ package com.rrodriguez.glide.bigcorp.converter;
 
 import com.rrodriguez.glide.bigcorp.model.dao.EmployeeDAO;
 import com.rrodriguez.glide.bigcorp.model.dao.OfficeDAO;
-import com.rrodriguez.glide.bigcorp.model.dao.Transformable;
 import com.rrodriguez.glide.bigcorp.model.dto.OfficeDTO;
 import com.rrodriguez.glide.bigcorp.service.OfficeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +32,12 @@ public class OfficeConverter {
         List<Long> fetchIds = list.stream()
                 .map(EmployeeDAO::getOffice)
                 .filter(Objects::nonNull)
-                .map(Transformable::getId)
+                .map(OfficeDAO::getId)
                 .collect(Collectors.toList());
 
         Map<Long, OfficeDAO> items = getOfficesByIds(fetchIds)
                 .stream()
-                .collect(Collectors.toMap(Transformable::getId, Function.identity()));
+                .collect(Collectors.toMap(OfficeDAO::getId, Function.identity()));
 
         for (EmployeeDAO employeeDAO : list) {
             if (employeeDAO.getOffice() != null)

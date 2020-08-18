@@ -7,7 +7,7 @@ import com.rrodriguez.glide.bigcorp.model.serializer.DepartmentSerializer;
 import com.rrodriguez.glide.bigcorp.model.serializer.EmployeeSerializer;
 import com.rrodriguez.glide.bigcorp.model.serializer.OfficeSerializer;
 
-public class EmployeeDAO implements Transformable {
+public class EmployeeDAO {
 
     private Long id;
     private String first;

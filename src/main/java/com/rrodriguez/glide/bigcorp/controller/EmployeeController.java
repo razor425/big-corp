@@ -37,7 +37,7 @@ public class EmployeeController {
         try {
             transformations = InputValidator.validateAndParseExpansions("employee", expand);
         } catch (InvalidExpansionException e) {
-            e.printStackTrace();
+            LOGGER.warn("Provided expand parameters failed to parse: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.ok(employeeService.getEmployeeById(id, transformations));
@@ -55,7 +55,7 @@ public class EmployeeController {
         try {
             transformations = InputValidator.validateAndParseExpansions("employee", expand);
         } catch (InvalidExpansionException e) {
-            e.printStackTrace();
+            LOGGER.warn("Provided expand parameters failed to parse: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.ok(employeeService.getEmployees(limit, offset,transformations));

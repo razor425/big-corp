@@ -39,6 +39,7 @@ public class EmployeeService {
     public List<EmployeeDTO> getEmployeesById(Set<Long> ids) {
         List<EmployeeDTO> result = new ArrayList<>();
         String params = ids.stream().map(p -> "id=" + p.toString()).collect(Collectors.joining("&"));
+
         return !params.equalsIgnoreCase("") ? request(params) : result;
     }
 
@@ -55,7 +56,7 @@ public class EmployeeService {
 
         String requestUrl = baseURL + "?" + params;
 
-        LOGGER.info("REQUESTING {}", requestUrl);
+        LOGGER.info("Calling {}", requestUrl);
 
         ResponseEntity<String> response = restTemplate.exchange(
                 requestUrl,
@@ -70,6 +71,7 @@ public class EmployeeService {
                     new TypeReference<List<EmployeeDTO>>() {
                     });
         } catch (IOException e) {
+            LOGGER.error("Failed to parse body from employees API with parameters: %s", params);
             throw new EmployeeApiException("Error in body, could not parse", e);
         }
     }

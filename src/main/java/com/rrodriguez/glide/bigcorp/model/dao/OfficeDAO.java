@@ -3,7 +3,7 @@ package com.rrodriguez.glide.bigcorp.model.dao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rrodriguez.glide.bigcorp.model.dto.OfficeDTO;
 
-public class OfficeDAO implements Transformable {
+public class OfficeDAO {
 
     private Long id;
     private String city;

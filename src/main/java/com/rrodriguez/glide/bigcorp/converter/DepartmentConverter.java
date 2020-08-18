@@ -3,7 +3,6 @@ package com.rrodriguez.glide.bigcorp.converter;
 import com.rrodriguez.glide.bigcorp.controller.validation.Expansions;
 import com.rrodriguez.glide.bigcorp.model.dao.DepartmentDAO;
 import com.rrodriguez.glide.bigcorp.model.dao.EmployeeDAO;
-import com.rrodriguez.glide.bigcorp.model.dao.Transformable;
 import com.rrodriguez.glide.bigcorp.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,12 +57,12 @@ public class DepartmentConverter {
         List<Long> fetchIds = list.stream()
                 .map(DepartmentDAO::getSuperdepartment)
                 .filter(Objects::nonNull)
-                .map(Transformable::getId)
+                .map(DepartmentDAO::getId)
                 .collect(Collectors.toList());
 
         Map<Long, DepartmentDAO> items = getDepartmentsByIds(fetchIds)
                 .stream()
-                .collect(Collectors.toMap(Transformable::getId, Function.identity()));
+                .collect(Collectors.toMap(DepartmentDAO::getId, Function.identity()));
 
         for (DepartmentDAO departmentDAO : list) {
             if (departmentDAO.getSuperdepartment() != null)
@@ -77,12 +76,12 @@ public class DepartmentConverter {
         List<Long> fetchIds = list.stream()
                 .map(EmployeeDAO::getDepartment)
                 .filter(Objects::nonNull)
-                .map(Transformable::getId)
+                .map(DepartmentDAO::getId)
                 .collect(Collectors.toList());
 
         Map<Long, DepartmentDAO> items = getDepartmentsByIds(fetchIds)
                 .stream()
-                .collect(Collectors.toMap(Transformable::getId, Function.identity()));
+                .collect(Collectors.toMap(DepartmentDAO::getId, Function.identity()));
 
         for (EmployeeDAO employeeDAO : list) {
             if (employeeDAO.getDepartment() != null)

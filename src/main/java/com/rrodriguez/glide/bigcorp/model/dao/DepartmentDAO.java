@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.rrodriguez.glide.bigcorp.model.dto.DepartmentDTO;
 import com.rrodriguez.glide.bigcorp.model.serializer.DepartmentSerializer;
 
-public class DepartmentDAO implements Transformable {
+public class DepartmentDAO {
 
     private Long id;
     private String name;

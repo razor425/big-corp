@@ -4,6 +4,8 @@ import com.rrodriguez.glide.bigcorp.controller.validation.InputValidator;
 import com.rrodriguez.glide.bigcorp.converter.DepartmentConverter;
 import com.rrodriguez.glide.bigcorp.converter.Transformation;
 import com.rrodriguez.glide.bigcorp.exception.InvalidExpansionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +22,8 @@ import java.util.List;
 @Validated
 public class DepartmentController {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(DepartmentController.class);
+
     @Autowired
     private DepartmentConverter departmentService;
 
@@ -31,7 +35,7 @@ public class DepartmentController {
         try {
             transformations = InputValidator.validateAndParseExpansions("department", expand);
         } catch (InvalidExpansionException e) {
-            e.printStackTrace();
+            LOGGER.warn("Provided expand parameters failed to parse: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.ok(departmentService.getDepartmentById(id, transformations));
@@ -47,7 +51,7 @@ public class DepartmentController {
         try {
             transformations = InputValidator.validateAndParseExpansions("department", expand);
         } catch (InvalidExpansionException e) {
-            e.printStackTrace();
+            LOGGER.warn("Provided expand parameters failed to parse: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 

@@ -4,6 +4,8 @@ import com.rrodriguez.glide.bigcorp.controller.validation.InputValidator;
 import com.rrodriguez.glide.bigcorp.converter.OfficeConverter;
 import com.rrodriguez.glide.bigcorp.converter.Transformation;
 import com.rrodriguez.glide.bigcorp.exception.InvalidExpansionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,8 @@ import java.util.List;
 @RestController
 @Validated
 public class OfficeController {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(OfficeController.class);
 
     @Autowired
     private OfficeConverter officeService;

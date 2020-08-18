@@ -3,7 +3,6 @@ package com.rrodriguez.glide.bigcorp.converter;
 import com.rrodriguez.glide.bigcorp.controller.validation.Expansions;
 import com.rrodriguez.glide.bigcorp.model.dao.DepartmentDAO;
 import com.rrodriguez.glide.bigcorp.model.dao.EmployeeDAO;
-import com.rrodriguez.glide.bigcorp.model.dao.Transformable;
 import com.rrodriguez.glide.bigcorp.model.dto.EmployeeDTO;
 import com.rrodriguez.glide.bigcorp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,12 +84,12 @@ public class EmployeeConverter {
         Set<Long> fetchIds = list.stream()
                 .map(EmployeeDAO::getManager)
                 .filter(Objects::nonNull)
-                .map(Transformable::getId)
+                .map(EmployeeDAO::getId)
                 .collect(Collectors.toSet());
 
         Map<Long, EmployeeDAO> items = getEmployeesByIds(fetchIds)
                 .stream()
-                .collect(Collectors.toMap(Transformable::getId, Function.identity()));
+                .collect(Collectors.toMap(EmployeeDAO::getId, Function.identity()));
 
         for (EmployeeDAO employeeDAO : list) {
             if (employeeDAO.getManager() != null)
@@ -99,14 +98,13 @@ public class EmployeeConverter {
         return new ArrayList<>(items.values());
     }
 
-
     public List<EmployeeDAO> getEmployees(int limit, int offset, List<Transformation> transformations) {
         List<EmployeeDAO> result = employeeService.getEmployees(limit, offset)
                 .stream()
                 .map(EmployeeDAO::new)
                 .collect(Collectors.toList());
 
-        transform(result,transformations);
+        transform(result, transformations);
 
         return result;
     }
